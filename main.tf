@@ -8,7 +8,7 @@ resource "azurerm_key_vault" "infrakv" {
     enabled_for_deployment          = false
     enabled_for_disk_encryption     = true
     enabled_for_template_deployment = true
-    purge_protection_enabled        = false
+    purge_protection_enabled        = true
     sku_name                        = "standard"
     soft_delete_retention_days      = 15
 

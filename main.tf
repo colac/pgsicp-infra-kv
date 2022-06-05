@@ -1,5 +1,4 @@
 # Azure Key Vault
-
 resource "azurerm_key_vault" "infrakv" {
     name                            = "${var.kvName}-${var.env[terraform.workspace]}"
     location                        = var.location
@@ -20,7 +19,6 @@ resource "azurerm_key_vault" "infrakv" {
     #   ["192.0.192.100/32"],["192.0.192.200/32"],split(",",var.actionsips)
     # )
   }
-
   # Tags to apply
     tags = var.tags
 }
@@ -33,6 +31,17 @@ resource "azurerm_key_vault_access_policy" "hflacerda" {
     certificate_permissions = var.kv_certificate_permissions_sys_admin
     key_permissions = var.kv_key_permissions_sys_admin
     secret_permissions = var.kv_secret_permissions_sys_admin
+    storage_permissions = []
+}
+
+# Add keys and secrets permission to the created appReg
+resource "azurerm_key_vault_access_policy" "kvappReg" {
+    key_vault_id = azurerm_key_vault.infrakv.id
+    tenant_id    = var.tenantId
+    object_id    = azuread_application.kvappreg.object_id
+    certificate_permissions = var.kv_certificate_permissions_appreg
+    key_permissions = var.kv_key_permissions_appreg
+    secret_permissions = var.kv_secret_permissions_appreg
     storage_permissions = []
 }
 
